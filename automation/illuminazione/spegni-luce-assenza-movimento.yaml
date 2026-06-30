@@ -1,0 +1,64 @@
+blueprint:
+  name: "Spegni luce su assenza movimento (porta chiusa, di notte)"
+  description: >
+    Spegne una luce quando non viene rilevato movimento per un certo tempo,
+    a condizione che la porta collegata sia chiusa da almeno lo stesso tempo
+    e che siamo tra il tramonto e l'alba.
+  domain: automation
+  input:
+    sensore_movimento:
+      name: Sensore di movimento
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+
+    tempo_assenza_movimento:
+      name: Tempo di assenza movimento
+      description: Tempo senza movimento prima di considerare lo spegnimento
+      default:
+        hours: 0
+        minutes: 0
+        seconds: 30
+      selector:
+        duration: {}
+
+    sensore_porta:
+      name: Sensore apertura porta
+      description: La porta deve risultare chiusa da almeno lo stesso tempo di assenza movimento
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: door
+
+    luce_target:
+      name: Luce da spegnere
+      selector:
+        entity:
+          domain: light
+
+trigger:
+  - platform: state
+    entity_id: !input sensore_movimento
+    to: "off"
+    for: !input tempo_assenza_movimento
+
+condition:
+  - condition: state
+    entity_id: !input sensore_porta
+    state: "off"
+    for: !input tempo_assenza_movimento
+  - condition: or
+    conditions:
+      - condition: sun
+        after: sunset
+      - condition: sun
+        before: sunrise
+
+action:
+  - action: light.turn_off
+    target:
+      entity_id: !input luce_target
+    data: {}
+
+mode: single
