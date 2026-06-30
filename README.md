@@ -36,6 +36,22 @@ Accende le luci quando rileva movimento e le spegne automaticamente dopo un time
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/luigi-regolo/ha-blueprints/main/automation/illuminazione/luci-su-movimento.yaml)
 
+### Accendi luce su apertura porta (di notte)
+
+Accende una luce quando la porta collegata si apre, solo se siamo tra tramonto e alba.
+
+**Richiede:** un sensore porta (`binary_sensor`, device_class door), una luce target
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/luigi-regolo/ha-blueprints/main/automation/illuminazione/luce-apertura-porta.yaml)
+
+### Spegni luce su assenza movimento (porta chiusa, di notte)
+
+Spegne una luce dopo un periodo configurabile di assenza movimento, se la porta collegata è chiusa e siamo tra tramonto e alba.
+
+**Richiede:** un sensore di movimento, un sensore porta, una luce target
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/luigi-regolo/ha-blueprints/main/automation/illuminazione/spegni-luce-assenza-movimento.yaml)
+
 ---
 
 ## ⬇️ Come importare un blueprint
@@ -49,10 +65,6 @@ Accende le luci quando rileva movimento e le spegne automaticamente dopo un time
 4. Incolla l'URL raw del file `.yaml` desiderato da questo repository
 5. Clicca **Anteprima**, poi **Importa blueprint**
 6. Crea una nuova automazione basata sul blueprint e configura i campi richiesti
-
-## 🤝 Contribuire
-
-Suggerimenti, correzioni o nuovi blueprint sono benvenuti: apri una issue o una pull request.
 
 ## 📄 Licenza
 
