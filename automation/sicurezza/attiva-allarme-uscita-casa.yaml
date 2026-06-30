@@ -1,0 +1,91 @@
+blueprint:
+  name: "Attiva allarme all'uscita di casa"
+  description: >
+    Quando la persona selezionata esce dalla zona casa, se l'allarme è disinserito,
+    avvia automaticamente: script opzionale (es. NVR), spegnimento media player,
+    spegnimento luci e inserimento allarme "away".
+  domain: automation
+  input:
+    persona:
+      name: Persona
+      description: La persona da monitorare per l'uscita da casa
+      selector:
+        entity:
+          domain: person
+
+    pannello_allarme:
+      name: Pannello allarme
+      description: Il dispositivo/entità dell'allarme da controllare e inserire
+      selector:
+        device:
+          entity:
+            domain: alarm_control_panel
+
+    codice_allarme:
+      name: Codice allarme
+      description: Codice per inserire l'allarme (lascia vuoto se non richiesto)
+      default: ""
+      selector:
+        text:
+          type: password
+
+    script_opzionale:
+      name: Script aggiuntivo (opzionale)
+      description: Es. script per attivare NVR/telecamere. Lascia vuoto se non serve.
+      default: ""
+      selector:
+        entity:
+          domain: script
+
+    media_player_da_spegnere:
+      name: Media player da spegnere
+      description: Uno o più media player da spegnere all'uscita
+      default: []
+      selector:
+        entity:
+          domain: media_player
+          multiple: true
+
+    luci_da_spegnere:
+      name: Luci da spegnere
+      description: Entità luce (o gruppo) da spegnere all'uscita
+      selector:
+        entity:
+          domain: light
+
+trigger:
+  - platform: zone
+    entity_id: !input persona
+    zone: zone.home
+    event: leave
+
+condition:
+  - condition: device
+    device_id: !input pannello_allarme
+    domain: alarm_control_panel
+    type: is_disarmed
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ script_opzionale != '' }}"
+        sequence:
+          - action: script.turn_on
+            target:
+              entity_id: !input script_opzionale
+  - action: media_player.turn_off
+    target:
+      entity_id: !input media_player_da_spegnere
+    data: {}
+  - action: light.turn_off
+    target:
+      entity_id: !input luci_da_spegnere
+    data: {}
+  - action: alarm_control_panel.alarm_arm_away
+    target:
+      device_id: !input pannello_allarme
+    data:
+      code: !input codice_allarme
+
+mode: single
