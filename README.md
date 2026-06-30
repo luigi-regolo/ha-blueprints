@@ -28,14 +28,6 @@ Quando la persona selezionata esce dalla zona casa, se l'allarme è disinserito,
 
 ## 💡 Illuminazione
 
-### Luci automatiche su movimento
-
-Accende le luci quando rileva movimento e le spegne automaticamente dopo un timeout configurabile.
-
-**Richiede:** un sensore di movimento (`binary_sensor`), una luce target
-
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/luigi-regolo/ha-blueprints/main/automation/illuminazione/luci-su-movimento.yaml)
-
 ### Accendi luce su apertura porta (di notte)
 
 Accende una luce quando la porta collegata si apre, solo se siamo tra tramonto e alba.
