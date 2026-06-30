@@ -1,0 +1,41 @@
+blueprint:
+  name: "Accendi luce su apertura porta (di notte)"
+  description: >
+    Accende una luce quando un sensore di apertura porta rileva "aperto",
+    ma solo se siamo tra il tramonto e l'alba.
+  domain: automation
+  input:
+    sensore_porta:
+      name: Sensore apertura porta
+      description: Sensore binario (es. contatto magnetico) che rileva apertura/chiusura
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: door
+
+    luce_target:
+      name: Luce da accendere
+      selector:
+        entity:
+          domain: light
+
+trigger:
+  - platform: state
+    entity_id: !input sensore_porta
+    to: "on"
+
+condition:
+  - condition: or
+    conditions:
+      - condition: sun
+        after: sunset
+      - condition: sun
+        before: sunrise
+
+action:
+  - action: light.turn_on
+    target:
+      entity_id: !input luce_target
+    data: {}
+
+mode: single
